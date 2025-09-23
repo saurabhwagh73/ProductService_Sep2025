@@ -38,23 +38,25 @@ public class productController {
 //        return name;
 //
 //    }
-    @GetMapping("/getProductById/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id){
+    @GetMapping("/products/{id}")
+    public ProductDto getProductById(@PathVariable("id") Long id){
         Product product=fakeStoreProductService.getProductById(id);
+
         //product object transfer to the ProductDto
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
         productDto.setName(product.getName());
         productDto.setDescription(product.getDescription());
         productDto.setPrice(product.getPrice());
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setName(product.getCategory().getName());
-        categoryDto.setDescription(product.getCategory().getDescription());
-        productDto.setCategoryDto(categoryDto);
-        //handling multithreaded
-        MultiValueMap<String,String> header=new LinkedMultiValueMap<>();
-        header.add("showing to ","Learners");
-        return new ResponseEntity<>(productDto,header, HttpStatus.OK);
+        productDto.setImage_url(product.getImage_url());
+        if(product.getCategory()!=null){
+            CategoryDto categoryDto = new CategoryDto();
+            categoryDto.setName(product.getCategory().getName());
+            productDto.setCategoryDto(categoryDto);
+        }
+
+
+        return productDto;
 
     }
 }

@@ -11,6 +11,6 @@ public class fakeStoreProductDto {
     private String title;
     private double price;
     private String description;
-    private Category category;
+    private String category;
     private String image_url;
 }

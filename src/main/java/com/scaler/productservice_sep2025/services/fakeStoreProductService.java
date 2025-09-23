@@ -1,7 +1,6 @@
 package com.scaler.productservice_sep2025.services;
 
-import com.scaler.productservice_sep2025.dtos.CategoryDto;
-import com.scaler.productservice_sep2025.dtos.ProductDto;
+
 import com.scaler.productservice_sep2025.dtos.fakeStoreProductDto;
 import com.scaler.productservice_sep2025.models.Category;
 import com.scaler.productservice_sep2025.models.Product;
@@ -15,23 +14,24 @@ import java.util.List;
 public class fakeStoreProductService implements IProductService{
     @Autowired
     RestTemplateBuilder restTemplateBuilder;
-    fakeStoreProductDto fakestoreProductDto;
     @Override
     public Product getProductById(Long id) {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        restTemplate.getForObject("https://fakestoreapi.com/products/1", fakeStoreProductDto.class,id);
-        //fakeStoreDto object transfer to the product object
-        Product product = new Product();
-        product.setId(fakestoreProductDto.getId());
-        product.setName(fakestoreProductDto.getTitle());
-        product.setDescription(fakestoreProductDto.getDescription());
-        product.setPrice(fakestoreProductDto.getPrice());
-        Category category = new Category();
-        category.setName(fakestoreProductDto.getCategory().getName());
-        category.setDescription(fakestoreProductDto.getCategory().getDescription());
-        product.setCategory(category);
+        fakeStoreProductDto fakestoreProductDto= restTemplate
+                .getForObject("https://fakestoreapi.com/products/{id}", fakeStoreProductDto.class,id);
 
-        return product;
+            //fakeStoreDto object transfer to the product object
+            Product product = new Product();
+            product.setId(fakestoreProductDto.getId());
+            product.setName(fakestoreProductDto.getTitle());
+            product.setDescription(fakestoreProductDto.getDescription());
+            product.setPrice(fakestoreProductDto.getPrice());
+            product.setImage_url(fakestoreProductDto.getImage_url());
+            Category category = new Category();
+            category.setName(fakestoreProductDto.getCategory());
+            product.setCategory(category);
+
+            return product;
     }
 
     @Override
