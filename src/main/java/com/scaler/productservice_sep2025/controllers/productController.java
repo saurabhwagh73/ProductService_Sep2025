@@ -39,9 +39,20 @@ public class productController {
 //
 //    }
     @GetMapping("/products/{id}")
-    public ProductDto getProductById(@PathVariable("id") Long id){
+    public ResponseEntity<ProductDto> getProductById(@PathVariable("id") Long id) throws IllegalAccessException {
+        if(id<=0){
+            throw new IllegalAccessException("product id available in between 1to 20");
+        }
         Product product=fakeStoreProductService.getProductById(id);
-
+        if(product==null){
+            throw new IllegalAccessException("product not found");
+        }
+        ProductDto productDto=from(product);
+        MultiValueMap<String,String> header=new LinkedMultiValueMap<>();
+        header.add("id","Showing to Learners");
+        return new ResponseEntity<>(productDto,header,HttpStatus.OK);
+    }
+    private ProductDto from(Product product){
         //product object transfer to the ProductDto
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
@@ -54,9 +65,6 @@ public class productController {
             categoryDto.setName(product.getCategory().getName());
             productDto.setCategoryDto(categoryDto);
         }
-
-
         return productDto;
-
     }
 }
