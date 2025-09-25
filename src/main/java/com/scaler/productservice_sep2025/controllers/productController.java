@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class productController {
@@ -51,6 +52,16 @@ public class productController {
         MultiValueMap<String,String> header=new LinkedMultiValueMap<>();
         header.add("id","Showing to Learners");
         return new ResponseEntity<>(productDto,header,HttpStatus.OK);
+    }
+    @GetMapping("/allProducts")
+    public List<ProductDto> getAllProducts(){
+        List<ProductDto> productDtos=new ArrayList<>();
+        List<Product> products=fakeStoreProductService.getAllProducts();
+        for(Product product:products){
+            ProductDto productDto=from(product);
+            productDtos.add(productDto);
+        }
+        return productDtos;
     }
     private ProductDto from(Product product){
         //product object transfer to the ProductDto
