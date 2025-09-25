@@ -64,7 +64,7 @@ public class fakeStoreProductService implements IProductService{
         fakeStoreProductDto fakeProduct=mapper(productDto);
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<fakeStoreProductDto> fakeStoreProductDtoResponseEntity=
-                requestForEntity("https://fakestoreapi.com/products/{id}",fakeProduct,
+                requestForEntity(HttpMethod.PUT,"https://fakestoreapi.com/products/{id}",fakeProduct,
                         fakeStoreProductDto.class,id);
         if(fakeStoreProductDtoResponseEntity.getStatusCode().equals(HttpStatusCode.valueOf(200))&&
         fakeStoreProductDtoResponseEntity.hasBody()){
@@ -72,11 +72,11 @@ public class fakeStoreProductService implements IProductService{
         }
         return null;
     }
-    public <T> ResponseEntity<T> requestForEntity(String url, @Nullable Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
+    public <T> ResponseEntity<T> requestForEntity(HttpMethod httpMethod,String url, @Nullable Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
         RestTemplate restTemplate = restTemplateBuilder.build();
         RequestCallback requestCallback = restTemplate.httpEntityCallback(request, responseType);
         ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
-        return restTemplate.execute(url, HttpMethod.PUT, requestCallback, responseExtractor, uriVariables);
+        return restTemplate.execute(url, httpMethod, requestCallback, responseExtractor, uriVariables);
     }
     private Product from(fakeStoreProductDto fakestoreProductDto){
         //fakeStoreDto object transfer to the product object
