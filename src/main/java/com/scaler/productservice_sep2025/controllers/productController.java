@@ -9,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +60,11 @@ public class productController {
             productDtos.add(productDto);
         }
         return productDtos;
+    }
+    @PutMapping("/products/{id}")
+    public ProductDto replace(@PathVariable("id") Long id,@RequestBody ProductDto productDto){
+        Product product=fakeStoreProductService.replaceProduct(id,productDto);
+        return from(product);
     }
     private ProductDto from(Product product){
         //product object transfer to the ProductDto
