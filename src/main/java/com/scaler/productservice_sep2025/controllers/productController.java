@@ -44,7 +44,7 @@ public class productController {
         }
         Product product=fakeStoreProductService.getProductById(id);
         if(product==null){
-            throw new IllegalAccessException("product not found");
+            throw new RuntimeException("product not found");
         }
         ProductDto productDto=from(product);
         MultiValueMap<String,String> header=new LinkedMultiValueMap<>();
@@ -66,6 +66,15 @@ public class productController {
         Product product=fakeStoreProductService.replaceProduct(id,productDto);
         return from(product);
     }
+    @PostMapping("/createProduct")
+    public ProductDto createProduct(@RequestBody ProductDto productDto){
+        Product product=fakeStoreProductService.createProduct(productDto);
+        if(product==null){
+            return null;
+        }
+        ProductDto productDto1=from(product);
+        return productDto1;
+    }
     private ProductDto from(Product product){
         //product object transfer to the ProductDto
         ProductDto productDto = new ProductDto();
@@ -81,4 +90,5 @@ public class productController {
         }
         return productDto;
     }
+
 }

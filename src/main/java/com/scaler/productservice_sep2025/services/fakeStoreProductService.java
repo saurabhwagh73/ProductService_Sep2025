@@ -55,8 +55,19 @@ public class fakeStoreProductService implements IProductService{
     }
 
     @Override
-    public Product createProduct(Product product) {
-        return null;
+    public Product createProduct(ProductDto productDto) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        fakeStoreProductDto fakeProduct=mapper(productDto);
+        fakeStoreProductDto fakestoreProductDto=restTemplate.postForObject("https://fakestoreapi.com/products",
+                fakeProduct,fakeStoreProductDto.class);
+//        ResponseEntity<fakeStoreProductDto> fakeStoreProductDtoResponseEntity=
+//                restTemplate.postForEntity("https://fakestoreapi.com/products",fakeProduct,
+//                        fakeStoreProductDto.class);
+//        if(fakeStoreProductDtoResponseEntity.getStatusCode().equals(HttpStatusCode.valueOf(200)) &&
+//        fakeStoreProductDtoResponseEntity.hasBody()){
+//            return from(fakeStoreProductDtoResponseEntity.getBody());
+//        }
+        return from(fakestoreProductDto);
     }
 
     @Override
