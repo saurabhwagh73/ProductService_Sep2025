@@ -88,6 +88,7 @@ public class productController {
         productDto.setImage_url(product.getImage_url());
         if(product.getCategory()!=null){
             CategoryDto categoryDto = new CategoryDto();
+            categoryDto.setId(product.getCategory().getId());
             categoryDto.setName(product.getCategory().getName());
             categoryDto.setDescription(product.getCategory().getDescription());
             productDto.setCategoryDto(categoryDto);
