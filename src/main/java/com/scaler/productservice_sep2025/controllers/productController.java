@@ -3,8 +3,10 @@ package com.scaler.productservice_sep2025.controllers;
 import com.scaler.productservice_sep2025.dtos.CategoryDto;
 import com.scaler.productservice_sep2025.dtos.ProductDto;
 import com.scaler.productservice_sep2025.models.Product;
+import com.scaler.productservice_sep2025.services.IProductService;
 import com.scaler.productservice_sep2025.services.fakeStoreProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -17,7 +19,8 @@ import java.util.List;
 @RestController
 public class productController {
     @Autowired
-    private fakeStoreProductService fakeStoreProductService;
+    @Qualifier("productService")
+    private IProductService ProductService;
 //    private final fakeStoreProductService fakeStoreProductService;
 //
 //    public productController(fakeStoreProductService fakeStoreProductService) {
@@ -42,7 +45,7 @@ public class productController {
         if(id<=0){
             throw new IllegalAccessException("product id available in between 1to 20");
         }
-        Product product=fakeStoreProductService.getProductById(id);
+        Product product=ProductService.getProductById(id);
         if(product==null){
             throw new RuntimeException("product not found");
         }
@@ -54,7 +57,7 @@ public class productController {
     @GetMapping("/allProducts")
     public List<ProductDto> getAllProducts(){
         List<ProductDto> productDtos=new ArrayList<>();
-        List<Product> products=fakeStoreProductService.getAllProducts();
+        List<Product> products=ProductService.getAllProducts();
         for(Product product:products){
             ProductDto productDto=from(product);
             productDtos.add(productDto);
@@ -63,12 +66,12 @@ public class productController {
     }
     @PutMapping("/products/{id}")
     public ProductDto replace(@PathVariable("id") Long id,@RequestBody ProductDto productDto){
-        Product product=fakeStoreProductService.replaceProduct(id,productDto);
+        Product product=ProductService.replaceProduct(id,productDto);
         return from(product);
     }
     @PostMapping("/createProduct")
     public ProductDto createProduct(@RequestBody ProductDto productDto){
-        Product product=fakeStoreProductService.createProduct(productDto);
+        Product product=ProductService.createProduct(productDto);
         if(product==null){
             return null;
         }
@@ -86,6 +89,7 @@ public class productController {
         if(product.getCategory()!=null){
             CategoryDto categoryDto = new CategoryDto();
             categoryDto.setName(product.getCategory().getName());
+            categoryDto.setDescription(product.getCategory().getDescription());
             productDto.setCategoryDto(categoryDto);
         }
         return productDto;
