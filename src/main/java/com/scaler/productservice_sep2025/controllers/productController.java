@@ -4,7 +4,6 @@ import com.scaler.productservice_sep2025.dtos.CategoryDto;
 import com.scaler.productservice_sep2025.dtos.ProductDto;
 import com.scaler.productservice_sep2025.models.Product;
 import com.scaler.productservice_sep2025.services.IProductService;
-import com.scaler.productservice_sep2025.services.fakeStoreProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -19,35 +18,17 @@ import java.util.List;
 @RestController
 public class productController {
     @Autowired
-    @Qualifier("productService")
+    @Qualifier("fakeStoreProducts")
     private IProductService ProductService;
-//    private final fakeStoreProductService fakeStoreProductService;
-//
-//    public productController(fakeStoreProductService fakeStoreProductService) {
-//        this.fakeStoreProductService = fakeStoreProductService;
-//    }
 
-//    @GetMapping("/printHello_Word")
-//    public ArrayList<String> printHello_Word(){
-//        ArrayList<String> name=new ArrayList<>();
-//        for(int i=0;i<10;i++){
-//            name.add("Hello World");
-//        }
-////        for(String s:name){
-////            System.out.print(s+" ");
-////        }
-////        System.out.println();
-//        return name;
-//
-//    }
     @GetMapping("/products/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable("id") Long id) throws IllegalAccessException {
+    public ResponseEntity<ProductDto> getProductById(@PathVariable("id") Long id) {
         if(id<=0){
-            throw new IllegalAccessException("product id available in between 1to 20");
+            throw new IllegalArgumentException("product id available in between 1to 20");
         }
         Product product=ProductService.getProductById(id);
         if(product==null){
-            throw new RuntimeException("product not found");
+            throw new RuntimeException("product not found and Please provide valid input");
         }
         ProductDto productDto=from(product);
         MultiValueMap<String,String> header=new LinkedMultiValueMap<>();
@@ -95,5 +76,4 @@ public class productController {
         }
         return productDto;
     }
-
 }
