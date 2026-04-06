@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 public class productController {
     @Autowired
-    @Qualifier("fakeStoreProducts")
+    @Qualifier("productService")
     private IProductService ProductService;
 
     @GetMapping("/products/{id}")
