@@ -1,3 +1,4 @@
+
 package com.scaler.productservice_sep2025.controllerTest;
 
 import com.scaler.productservice_sep2025.controllers.productController;
@@ -10,8 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -37,5 +37,21 @@ public class productControllerTest {
         assertNotNull(productDtoResponseEntity.getBody());
         assertEquals(id,productDtoResponseEntity.getBody().getId());
         assertEquals(product.getName(),productDtoResponseEntity.getBody().getName());
+    }
+    @Test
+    public void invalidIndexThrowsIllegalArugumentException(){
+        //Arrange
+        Long id=-1L;
+        //Act and Assert
+        Exception exception=assertThrows(IllegalArgumentException.class,()->productcontroller.getProductById(id));
+        assertEquals("product id available in between 1to 20",exception.getMessage());
+    }
+    @Test
+    public void productNotFoundThrowsRuntimeException(){
+        //Arrange
+        Long id=100L;
+        when(productService.getProductById(id)).thenThrow(new RuntimeException("something went bad"));
+        //Act and Assert
+        assertThrows(RuntimeException.class,()->productcontroller.getProductById(id));
     }
 }
