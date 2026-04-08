@@ -50,7 +50,7 @@ public class productController {
         Product product=ProductService.replaceProduct(id,productDto);
         return from(product);
     }
-    @PostMapping("/createProduct")
+    @PostMapping("/products")
     public ProductDto createProduct(@RequestBody ProductDto productDto){
         Product product=ProductService.createProduct(productDto);
         if(product==null){
