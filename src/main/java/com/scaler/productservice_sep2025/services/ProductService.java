@@ -3,6 +3,7 @@ package com.scaler.productservice_sep2025.services;
 import com.scaler.productservice_sep2025.dtos.ProductDto;
 import com.scaler.productservice_sep2025.models.Category;
 import com.scaler.productservice_sep2025.models.Product;
+import com.scaler.productservice_sep2025.repositories.Categoryrepo;
 import com.scaler.productservice_sep2025.repositories.Productrepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -10,11 +11,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @Component("productService")
 public class ProductService implements IProductService{
     @Autowired
     Productrepo productrepo;
+    @Autowired
+    private Categoryrepo categoryrepo;
+
     @Override
     public Product getProductById(Long id) {
         return productrepo.findById(id).get();
@@ -28,6 +34,12 @@ public class ProductService implements IProductService{
     @Override
     public Product createProduct(ProductDto productDto) {
         Product product =from(productDto);
+        //find the category exist or not
+        Category category=categoryrepo.findById(productDto.getCategoryDto().getId())
+                .orElseThrow(()->new RuntimeException("Category not found"));
+
+        //If exist the category to save into the Product inside
+        product.setCategory(category);
         return productrepo.save(product);
     }
 
