@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class productControllerTest {
@@ -37,6 +37,7 @@ public class productControllerTest {
         assertNotNull(productDtoResponseEntity.getBody());
         assertEquals(id,productDtoResponseEntity.getBody().getId());
         assertEquals(product.getName(),productDtoResponseEntity.getBody().getName());
+        verify(productService,times(1)).getProductById(id);
     }
     @Test
     public void invalidIndexThrowsIllegalArugumentException(){
@@ -45,6 +46,7 @@ public class productControllerTest {
         //Act and Assert
         Exception exception=assertThrows(IllegalArgumentException.class,()->productcontroller.getProductById(id));
         assertEquals("product id available in between 1to 20",exception.getMessage());
+        verify(productService,times(0)).getProductById(id);
     }
     @Test
     public void productNotFoundThrowsRuntimeException(){
